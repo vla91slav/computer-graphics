@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Компьютерная графика</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="input-block">
+            <label id="coordx" for="coordx">X:</label>
+            <input type="text" id="xinput" name="xinput" placeholder="пример: 12.123">
+            <br>
+            <label for="coordy">Y:</label>
+            <input type="text" id="yinput" name="yinput" placeholder="пример: 906">
+            <br>
+            <label for="delete">Номер для удаления:</label>
+            <input type="text" id="dotinput" name="dotinput">
+        </div>
+        <div class="button-block">
+            <button id="add">Добавить точку</button>
+            <button id="del">Удалить точку/прямую</button>
+            <button id="add-line">Добавить прямую (0/2)</button>
+            <button id="delete-all">Очистить все</button>
+        </div>
+        <div class="textarea-block one">
+            <label for="dots">Список точек</label>
+            <textarea id="text-area-1" readonly></textarea>
+        </div>
+        <div class="textarea-block two">
+            <label for="lines">Список прямых</label>
+            <textarea id="text-area-2" readonly></textarea>
+        </div>
+        <div class="result-block">
+            <span>Результат:</span>
+            <textarea id="result" readonly></textarea>
+            <button id="execute">Выполнить</button>
+            <button id="mode">Режим: точки</button>
+        </div>
+    </div>
+    <canvas id="myChart"></canvas>
+    <button type="button" id="link" hidden></button>
+</body>
+<script>
+    require('./render.js')
+</script>
+<script>
+    window.chart
+    window.chartData = { datasets: [] }
+    window.nextDatasetId = 0
+    window.success = 0
+    const linkBtn = document.getElementById('link')
+
+    function createChart() {
+      const ctx = document.getElementById('myChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'scatter',
+        data: chartData,
+        options: {
+          // animation: {
+          //   duration: 0
+          // },
+          responsive: true, // resize window
+          aspectRatio: 2.3,
+          scales: {
+            x: {
+              suggestedMin: -10,
+              suggestedMax: 10,
+              ticks: {
+                beginAtZero: true,
+                callback: function (value) { if (Number.isInteger(value)) { return value; } },
+                stepSize: 1
+              }
+            },
+            y: {
+              // position: 'center',
+              suggestedMin: -10,
+              suggestedMax: 10,
+              ticks: {
+                beginAtZero: false,
+                callback: function (value) { if (Number.isInteger(value)) { return value; } },
+                stepSize: 1
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            zoom: {
+              zoom: {
+                wheel: {
+                  enabled: true
+                },
+                pinch: {
+                  enabled: true
+                },
+                mode: 'xy' // равномерный зум по 2 осям
+              }
+            }
+          }
+        }
+      });
+    }
+
+    let tempData = [] // хранит 2 точки для отрисовки прямой
+
+    function addLineData(x, y) {
+      tempData.push({x, y})
+      if (tempData.length === 2) {
+        const datasetId = nextDatasetId++
+        chartData.datasets.push({
+          label: 'Line ' + datasetId,
+          type: 'line',
+          data: tempData,
+          backgroundColor: `hsl(${datasetId * 50}, 50%, 50%)`,
+          borderColor: 'black',
+          borderWidth: 1,
+          showLine: true
+        })
+        chart.update()
+        chart.resetZoom() // автомасштабирование
+        tempData = []
+      }
+    }
+
+    function addData(x, y) {  
+        for (let i = 0; i < chartData.datasets.length; i++) {
+          if (chartData.datasets[i].data.length == 1 && x == chartData.datasets[i].data[0].x && y == chartData.datasets[i].data[0].y) {
+              // createErrorWindow()
+              alert('Ошибка ввода точки')
+              return
+          }
+        }
+        const datasetId = nextDatasetId++;
+        chartData.datasets.push({
+            label: 'Dot ' + datasetId,
+            data: [{ x, y }],
+            backgroundColor: `hsl(${datasetId * 50}, 50%, 50%)`
+        })
+
+        if (!allDots.value) {
+          global.allDots.value = `${datasetId}) ${x.toFixed(3)}, ${y.toFixed(3)}`
+        } else {
+          global.allDots.value = global.allDots.value + "\n" + `${datasetId}) ${x.toFixed(3)}, ${y.toFixed(3)}`
+        }
+
+        chart.update()
+        chart.resetZoom() // автомасштабирование
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        createChart()
+
+        const canvas = document.getElementById('myChart')
+        canvas.addEventListener('mousedown', (event) => {
+          if (event.button == 0) {
+            const canvasPosition = Chart.helpers.getRelativePosition(event, chart)
+            const x = chart.scales.x.getValueForPixel(canvasPosition.x)
+            const y = chart.scales.y.getValueForPixel(canvasPosition.y)
+
+            if (global.drawMode) {
+                addLineData(x, y)
+            } else {
+                addData(x, y)
+            }
+          } else if (event.button == 2) { // правая кнопка мыши
+            const xy = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true)
+            if (xy.length) {
+              window.success = 1
+              const ind = xy[0].datasetIndex
+              chartData.datasets.splice(ind, 1)
+              chart.update()
+            }
+          }
+        })
+    })
+</script>
+</html>

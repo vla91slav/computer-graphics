@@ -1,0 +1,148 @@
+.container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* float: left; */
+}
+
+.input-block {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.input-block label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.input-block input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 200px;
+    font-size: 16px;
+}
+
+#coordx {
+    margin-top: 5px;
+}
+
+.button-block {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    /* justify-content: center; */
+}
+
+.button-block button {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 150px;
+    font-size: 16px;
+    margin-top: 27px;
+
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+.button-block button:hover {
+    background-color: #3e8e41;
+}
+
+textarea {
+    resize: none;
+    height: 200px;
+}
+
+.textarea-block {
+    display: flex;
+    flex-direction: row;
+    margin-right: 10px;
+  }
+
+.textarea-block textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 200px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.one {
+    flex-direction: column;
+}
+
+.two {
+    flex-direction: column;
+}
+
+.textarea-block label {
+    font-weight: bold;
+}
+
+.result-block {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+  
+.result-block span {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+  
+.result-block textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 300px;
+    height: 100px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#execute {
+    text-align: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+#execute:hover {
+    background-color: #3e8e41;
+}
+
+#mode {
+    text-align: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+#mode:hover {
+    background-color: #3e8e41;
+}
+
+/* canvas {
+    width: 1200px;
+} */
