@@ -1,0 +1,22 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vla91slav/computer-graphics.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vla91slav/computer-graphics/issues"
+  },
+  "homepage": "https://github.com/vla91slav/computer-graphics#readme",
+  "dependencies": {
+    "electron": "^23.1.3"
+  }
+}
