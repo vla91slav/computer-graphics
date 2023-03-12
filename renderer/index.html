@@ -145,9 +145,13 @@
     }
 
     function zoom(x, y) {
-        scaleFactorX = x > 0 ? scaleFactorX * x : scaleFactorX / -x
-        scaleFactorY = y > 0 ? scaleFactorY * y : scaleFactorY / -y
-        // drawTranslated()
+        if (x <= -1 || x >= 1) { scaleFactorX *= x }
+        else if (x > 0 && x < 1) { scaleFactorX /= (1 + x) }
+        else { scaleFactorX = 1.00 }
+
+        if (y <= -1 || y >= 1) { scaleFactorY *= y }
+        else if (y > 0 && y < 1) { scaleFactorY /= (1 + y) }
+        else { scaleFactorY = 1.00 }
     }
 
     function panUp(n, save=1) {
