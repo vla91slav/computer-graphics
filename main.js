@@ -26,12 +26,13 @@ function createWindow() {
     })
 }
 
-function createHelpWindow() {
+function createToolbarWindow(link, w, h)
+{
     win = new BrowserWindow({
-        width: 1250,
-        height: 950,
-        minWidth: 1250,
-        minHeight: 950,
+        width: w,
+        height: h,
+        minWidth: 400,
+        minHeight: 200,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -39,21 +40,94 @@ function createHelpWindow() {
         }
     })
     win.loadURL(url.format({
-        pathname: path.join(__dirname, './renderer/help.html'),
+        pathname: path.join(__dirname, link),
         protocol: 'file:',
-        slashes: true
+        slashes: true,
+        frame: false
     }))
-
-    win.webContents.openDevTools()
+    win.setMenuBarVisibility(false)
     win.on('closed', () => {
         win = null
     })
 }
 
-app.whenReady().then(() => {
+function checkIfOpened() {
+    const windows = BrowserWindow.getAllWindows()
+    if (windows.length > 1) {
+        windows[0].focus()
+        return false
+    }
+    return true
+}
+
+app.on('ready', () => {
     createWindow()
+    const template = [
+        {
+            label: 'Помощь',
+            click: () =>
+            {
+                if (checkIfOpened())
+                    createToolbarWindow('./renderer/help.html', 400, 1000)
+            }
+        },
+        {
+            label: 'Условие',
+            click: () => {
+                if (checkIfOpened())
+                    createToolbarWindow('./renderer/task.html', 400, 200)
+            }
+        },
+        {
+            label: 'Справка',
+            click: () => {
+                if (checkIfOpened())
+                    createToolbarWindow('./renderer/info.html', 400, 250)
+            }
+        }
+    ]
+    const mactemplate = [
+        {
+            label: 'tmp'
+        },
+        {
+            label: 'Информация',
+            submenu: [
+                {
+                    label: 'Условие',
+                    click: () => {
+                        if (checkIfOpened())
+                            createToolbarWindow('task.html', 400, 200)
+                    }
+                },
+                {
+                    label: 'Помощь',
+                    click: () => {
+                        if (checkIfOpened())
+                            createToolbarWindow('help.html', 400, 1000)
+                    }
+                },
+                {
+                    label: 'Справка',
+                    click: () => {
+                        if (checkIfOpened())
+                            createToolbarWindow('info.html', 400, 250)
+                    }
+                }
+            ]
+        }
+    ]
+    let menu
+    if (process.platform == 'darwin') {
+        menu = Menu.buildFromTemplate(mactemplate)
+    } else {
+        menu = Menu.buildFromTemplate(template)
+    }
+    Menu.setApplicationMenu(menu)
 })
 
-ipcMain.on('open-help-window', () => {
-    createHelpWindow()
+app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
 })

@@ -4,6 +4,6 @@ const { app, ipcRenderer } = require('electron')
 
 const testBtn = document.getElementById('window')
 
-testBtn.addEventListener('click', () => {
-    ipcRenderer.send('open-help-window')
-})
+// testBtn.addEventListener('click', () => {
+//     ipcRenderer.send('open-help-window')
+// })

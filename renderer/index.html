@@ -14,13 +14,13 @@
             <div class="fast-moves">
                 <p class="moves">Быстрые действия:</p>
                 <button id="zoomin" class="nav" title="Приблизить" onclick="zoomIn()">&#43;</button>
-                <button id="zoomout" class="nav" title="Уменьшить" onclick="zoomOut()">&#8722;</button>
-                <button id="panup" class="nav" title="Сместить вверх" onclick="panUp()">&#8679;</button>
-                <button id="pandown" class="nav" title="Сместить вниз" onclick="panDown()">&#8681;</button>
-                <button id="panleft" class="nav" title="Сместить влево" onclick="panLeft()">&#8678;</button>
-                <button id="panright" class="nav" title="Сместить вправо" onclick="panRight()">&#8680;</button>
-                <button id="rotateleft" class="nav" title="Повернуть влево на 90 градусов" onclick="rotate(-90)">&#10553;</button>
-                <button id="rotateright" class="nav" title="Повернуть вправо на 90 градусов" onclick="rotate(90)">&#10552;</button>
+                <button id="zoomout" class="nav" title="Отдалить" onclick="zoomOut()">&#8722;</button>
+                <button id="panup" class="nav" title="Сместить вверх" onclick="panUp(25)">&#8679;</button>
+                <button id="pandown" class="nav" title="Сместить вниз" onclick="panDown(25)">&#8681;</button>
+                <button id="panleft" class="nav" title="Сместить влево" onclick="panLeft(25)">&#8678;</button>
+                <button id="panright" class="nav" title="Сместить вправо" onclick="panRight(25)">&#8680;</button>
+                <button id="rotateleft" class="nav" title="Повернуть влево на 90 градусов" onclick="rotate(-90, save=1)">&#10553;</button>
+                <button id="rotateright" class="nav" title="Повернуть вправо на 90 градусов" onclick="rotate(90, save=1)">&#10552;</button>
                 <button id="reset" class="nav" title="Сброс" onclick="reset()">&#8634;</button>
             </div>
             <div class="wrapper">
@@ -34,8 +34,8 @@
                 <label class="label-1">Смещение по x</label>
                 <label class="label-1">Смещение по y</label>
                 <br>
-                <input type="text" id="xmove" placeholder="пример: 4">
-                <input type="text" id="ymove" placeholder="пример: 2.5">
+                <input type="text" id="xmove" onclick="this.select();" placeholder="пример: 4">
+                <input type="text" id="ymove" onclick="this.select();" placeholder="пример: 2.5">
                 <br>
                 <button id="move">Переместить</button>
             </div>
@@ -43,7 +43,7 @@
             <div class="input-2">
                 <label class="label-2">Угол поворота (в градусах)</label>
                 <br>
-                <input type="text" id="rotate" placeholder="пример: 90">
+                <input type="text" id="rotate" onclick="this.select();" placeholder="пример: 90">
                 <button id="rotatebtn">Повернуть</button>
             </div>
             <br>
@@ -53,8 +53,8 @@
                 <label class="label-4">x</label>
                 <label class="label-4">y</label>
                 <br>
-                <input type="text" id="xcenter" placeholder="пример: 4">
-                <input type="text" id="ycenter" placeholder="пример: 2.5">
+                <input type="text" id="xcenter" onclick="this.select();" placeholder="пример: 4">
+                <input type="text" id="ycenter" onclick="this.select();" placeholder="пример: 2.5">
                 <br>
                 <button id="centerupdate">Обновить центр рисунка</button>
             </div>
@@ -63,8 +63,8 @@
                 <label class="label-5">Масштабирование по x</label>
                 <label class="label-5">Масштабирование по y</label>
                 <br>
-                <input type="text" id="xscale" placeholder="пример: 4">
-                <input type="text" id="yscale" placeholder="пример: 2.5">
+                <input type="text" id="xscale" onclick="this.select();" placeholder="пример: 4">
+                <input type="text" id="yscale" onclick="this.select();" placeholder="пример: 2.5">
                 <br>
                 <button id="scale">Масштабировать</button>
             </div>
@@ -80,81 +80,96 @@
     let ctx = canvas.getContext("2d")
     let canvas1 = document.getElementById("canvasX")
     let ctxX = canvas1.getContext("2d")
+    let statuses = []
 
     let cw = canvas.width
     let ch = canvas.height
-    let mapW = 200
-    let mapH = 200
     let panX = 0
     let panY = 0
-    let scaleFactor = 1.00
+    let scaleFactorX = 1.00
+    let scaleFactorY = 1.00
     let radius = 62
     let fastRotate = 0
+
+    function saveStatus() {
+        statuses.push({
+            panX: panX,
+            panY: panY,
+            scaleFactorX: scaleFactorX,
+            scaleFactorY: scaleFactorY,
+            fastRotate: fastRotate
+        })
+    }
 
     function toRad(n) {
         return n * Math.PI / 180
     }
 
-    function rotate(degree) {
+    function rotate(degree, save=0) {
+        if (save) saveStatus()
         fastRotate = fastRotate + toRad(degree)
         drawTranslated()
     }
 
     function reset() {
+        saveStatus()
         document.getElementById("reset").click(); {
-            cw = canvas.width
-            ch = canvas.height
-            mapW = 200
-            mapH = 200
             panX = 0
             panY = 0
-            scaleFactor = 1.00
+            scaleFactorX = 1.00
+            scaleFactorY = 1.00
             radius = 62
             fastRotate = 0
             drawTranslated()
         }
     }
 
-    function zoomIn(n=1.1) {
+    function zoomIn(n=1.1, m=1.1) {
         document.getElementById("zoomin").click(); {
-            scaleFactor *= n
+            saveStatus()
+            scaleFactorX *= n
+            scaleFactorY *= m
             drawTranslated()
         }
     }
 
-    function zoomOut(n=1.1) {
+    function zoomOut(n=1.1, m=1.1) {
         document.getElementById("zoomout").click(); {
-            scaleFactor /= n
+            saveStatus()
+            scaleFactorX /= n
+            scaleFactorY /= m
             drawTranslated()
         }
     }
 
-    function panUp(n=25) {
-        document.getElementById("panup").click(); {
-            panY -= n
-            drawTranslated()
-        }
+    function zoom(x, y) {
+        scaleFactorX = x > 0 ? scaleFactorX * x : scaleFactorX / -x
+        scaleFactorY = y > 0 ? scaleFactorY * y : scaleFactorY / -y
+        drawTranslated()
     }
 
-    function panDown(n=25) {
-        document.getElementById("pandown").click(); {
-            panY += n
-            drawTranslated()
-        }
+    function panUp(n, save=1) {
+        if (save) saveStatus()
+        panY -= n
+        drawTranslated()
     }
 
-    function panLeft(n=25) {
-        document.getElementById("panleft").click(); {
-            panX -= n
-            drawTranslated()
-        }
+    function panDown(n, save=1) {
+        if (save) saveStatus()
+        panY += n
+        drawTranslated()
     }
 
-    function panRight(n=25) {
-        document.getElementById("panright").click(); {
-            panX += n
-            drawTranslated()
-        }
+    function panLeft(n, save=1) {
+        if (save) saveStatus()
+        panX -= n
+        drawTranslated()
+    }
+
+    function panRight(n, save=1) {
+        if (save) saveStatus()
+        panX += n
+        drawTranslated()
     }
 
     function drawTranslated() {
@@ -162,10 +177,9 @@
         ctx.clearRect(0, 0, cw, ch)
         ctx.save()
         ctx.translate(cw / 2, ch / 2)
-        ctx.scale(scaleFactor, scaleFactor)
-        if (fastRotate) ctx.rotate(fastRotate)  // поворот через быстрые действия
+        ctx.scale(scaleFactorX, scaleFactorY)
         ctx.translate(panX, panY)
-        // ctx.fillRect(mapW / -2, mapH / -2, mapW, mapH)
+        if (fastRotate) ctx.rotate(fastRotate)  // поворот через быстрые действия
 
         // фигура
         ctx.beginPath();
@@ -335,9 +349,10 @@
     const scaleY = document.getElementById('yscale')
 
     moveBtn.addEventListener('click', () => {
+        saveStatus()
         let xm = moveX.value
         let ym = moveY.value
-        if (!isNumeric(xm) || !isNumeric(ym)) {
+        if (!isNumeric(xm) || !isNumeric(ym) || xm == '' || ym == '') {
             moveX.value = ''
             moveY.value = ''
             alert('Некорректный ввод координат')
@@ -346,16 +361,17 @@
         xm = parseFloat(xm)
         ym = parseFloat(ym)
 
-        if (xm > 0) panRight(xm)
-        else panLeft(xm)
+        if (xm > 0) panRight(xm, save=0)
+        else panLeft(n=xm, save=0)
 
-        if (ym > 0) panUp(ym)
-        else panDown(ym)
+        if (ym > 0) panUp(ym, save=0)
+        else panDown(n=ym, save=0)
     })
 
     rotateBtn.addEventListener('click', () => {
+        saveStatus()
         let a = angle.value
-        if (!isNumeric(a)) {
+        if (!isNumeric(a) || a == '') {
             angle.value = ''
             alert('Некорректный ввод угла')
             return
@@ -365,9 +381,10 @@
     })
 
     updBtn.addEventListener('click', () => {
+        saveStatus()
         let xm = centerX.value
         let ym = centerY.value
-        if (!isNumeric(xm) || !isNumeric(ym)) {
+        if (!isNumeric(xm) || !isNumeric(ym) || xm == '' || ym == '') {
             centerX.value = ''
             centerY.value = ''
             alert('Некорректный ввод координат')
@@ -377,11 +394,41 @@
         ym = parseFloat(ym)
         x = xm
         y = ym
-        if (xm > 0) panRight(xm)
-        else panLeft(xm)
 
-        if (ym > 0) panUp(ym)
-        else panDown(ym)
+        panX = xm
+        panY = -ym
+        drawTranslated()
+    })
+
+    scaleBtn.addEventListener('click', () => {
+        saveStatus()
+        let xm = scaleX.value
+        let ym = scaleY.value
+        if (!isNumeric(xm) || !isNumeric(ym) || xm == '' || ym == '') {
+            scaleX.value = ''
+            scaleY.value = ''
+            alert('Некорректный ввод')
+            return
+        }
+        xm = parseFloat(xm)
+        ym = parseFloat(ym)
+        zoom(xm, ym)
+    })
+
+    document.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'z') {
+            let len = statuses.length
+            if (len == 0) return
+            let status = statuses[len - 1]
+            console.log('status', status)
+            panX = status.panX
+            panY = status.panY
+            scaleFactorX = status.scaleFactorX
+            scaleFactorY = status.scaleFactorY
+            fastRotate = status.fastRotate
+            statuses.pop()
+            drawTranslated()
+        }
     })
 </script>
 </html>
