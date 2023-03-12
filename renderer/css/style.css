@@ -1,5 +1,95 @@
-#wrapper {
-    position: relative;
+.container-1 {
+    display: flex;
+    justify-content: center;
+}
+
+.canvas-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-block {
+    margin-left: 300px;
+}
+
+.input-1 {
+    margin-top: 35px;
+}
+
+.label-1 {
+    margin-right: 75px;
+}
+
+#move {
+    margin-top: 10px;
+    justify-content: center;
+    width: 40%;
+    margin-left: 30%;
+}
+
+.label-2 {
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-left: 25%;
+}
+
+#rotate {
+    margin-top: 10px;
+    margin-left: 25%;
+}
+
+#rotatebtn {
+    margin-top: 10px;
+    justify-content: center;
+    width: 40%;
+    margin-left: 30%;
+}
+
+.label-3 {
+    margin-left: 35%;
+    margin-top: 10px;
+}
+
+.label-4 {
+    margin-top: 10px;
+    margin-right: 185px;
+}
+
+#centerupdate {
+    margin-top: 10px;
+    justify-content: center;
+    width: 40%;
+    margin-left: 30%;
+}
+
+.label-5 {
+    margin-top: 10px;
+    margin-right: 15px;
+}
+
+#scale {
+    margin-top: 10px;
+    justify-content: center;
+    width: 40%;
+    margin-left: 30%;
+}
+
+button {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3e8e41;
 }
 
 canvas {
@@ -14,7 +104,7 @@ canvas {
 
 .moves {
     margin-right: 30px;
-    margin-top: 2px;
+    margin-top: 10px;
     text-align: center;
 }
 

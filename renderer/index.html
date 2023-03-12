@@ -9,22 +9,66 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <!-- <canvas id="myCanvas" width="800" height="800"></canvas> -->
-    <div class="fast-moves">
-        <p class="moves">Быстрые действия:</p>
-        <button id="zoomin" class="nav" title="Приблизить" onclick="zoomIn()">&#43;</button>
-        <button id="zoomout" class="nav" title="Уменьшить" onclick="zoomOut()">&#8722;</button>
-        <button id="panup" class="nav" title="Сместить вверх" onclick="panUp()">&#8679;</button>
-        <button id="pandown" class="nav" title="Сместить вниз" onclick="panDown()">&#8681;</button>
-        <button id="panleft" class="nav" title="Сместить влево" onclick="panLeft()">&#8678;</button>
-        <button id="panright" class="nav" title="Сместить вправо" onclick="panRight()">&#8680;</button>
-        <button id="rotateleft" class="nav" title="Повернуть влево на 90 градусов" onclick="rotate(-90)">&#10553;</button>
-        <button id="rotateright" class="nav" title="Повернуть вправо на 90 градусов" onclick="rotate(90)">&#10552;</button>
-        <button id="reset" class="nav" title="Сброс" onclick="reset()">&#8634;</button>
-      </div>
-      <div id="wrapper">
-        <canvas id="canvas" width="800" height="850"></canvas>
-        <canvas id="canvasX" width="800" height="850"></canvas>
+      <div class="container-1">
+        <div class="canvas-buttons">
+            <div class="fast-moves">
+                <p class="moves">Быстрые действия:</p>
+                <button id="zoomin" class="nav" title="Приблизить" onclick="zoomIn()">&#43;</button>
+                <button id="zoomout" class="nav" title="Уменьшить" onclick="zoomOut()">&#8722;</button>
+                <button id="panup" class="nav" title="Сместить вверх" onclick="panUp()">&#8679;</button>
+                <button id="pandown" class="nav" title="Сместить вниз" onclick="panDown()">&#8681;</button>
+                <button id="panleft" class="nav" title="Сместить влево" onclick="panLeft()">&#8678;</button>
+                <button id="panright" class="nav" title="Сместить вправо" onclick="panRight()">&#8680;</button>
+                <button id="rotateleft" class="nav" title="Повернуть влево на 90 градусов" onclick="rotate(-90)">&#10553;</button>
+                <button id="rotateright" class="nav" title="Повернуть вправо на 90 градусов" onclick="rotate(90)">&#10552;</button>
+                <button id="reset" class="nav" title="Сброс" onclick="reset()">&#8634;</button>
+            </div>
+            <div class="wrapper">
+                <canvas id="canvas" width="800" height="850"></canvas>
+                <canvas id="canvasX" width="800" height="850"></canvas>
+            </div>
+        </div>
+
+          <div class="input-block">
+            <div class="input-1">
+                <label class="label-1">Смещение по x</label>
+                <label class="label-1">Смещение по y</label>
+                <br>
+                <input type="text" id="xmove" placeholder="пример: 4">
+                <input type="text" id="ymove" placeholder="пример: 2.5">
+                <br>
+                <button id="move">Переместить</button>
+            </div>
+            <br>
+            <div class="input-2">
+                <label class="label-2">Угол поворота (в градусах)</label>
+                <br>
+                <input type="text" id="rotate" placeholder="пример: 90">
+                <button id="rotatebtn">Повернуть</button>
+            </div>
+            <br>
+            <div class="input-3">
+                <label class="label-3">Центр рисунка</label>
+                <br>
+                <label class="label-4">x</label>
+                <label class="label-4">y</label>
+                <br>
+                <input type="text" id="xcenter" placeholder="пример: 4">
+                <input type="text" id="ycenter" placeholder="пример: 2.5">
+                <br>
+                <button id="centerupdate">Обновить центр рисунка</button>
+            </div>
+            <br>
+            <div class="input-4">
+                <label class="label-5">Масштабирование по x</label>
+                <label class="label-5">Масштабирование по y</label>
+                <br>
+                <input type="text" id="xscale" placeholder="пример: 4">
+                <input type="text" id="yscale" placeholder="пример: 2.5">
+                <br>
+                <button id="scale">Масштабировать</button>
+            </div>
+          </div>
       </div>
     <div><button id="window" hidden>new window</button></div>
 </body>
