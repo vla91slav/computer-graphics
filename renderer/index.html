@@ -91,6 +91,8 @@
     let radius = 62
     let fastRotate = 0
 
+    let deg = 0 // для анимации
+
     function saveStatus() {
         statuses.push({
             panX: panX,
@@ -108,7 +110,6 @@
     function rotate(degree, save=0) {
         if (save) saveStatus()
         fastRotate = fastRotate + toRad(degree)
-        drawTranslated()
     }
 
     function reset() {
@@ -120,7 +121,8 @@
             scaleFactorY = 1.00
             radius = 62
             fastRotate = 0
-            drawTranslated()
+            deg = 0
+            // drawTranslated()
         }
     }
 
@@ -129,7 +131,7 @@
             saveStatus()
             scaleFactorX *= n
             scaleFactorY *= m
-            drawTranslated()
+            // drawTranslated()
         }
     }
 
@@ -138,38 +140,38 @@
             saveStatus()
             scaleFactorX /= n
             scaleFactorY /= m
-            drawTranslated()
+            // drawTranslated()
         }
     }
 
     function zoom(x, y) {
         scaleFactorX = x > 0 ? scaleFactorX * x : scaleFactorX / -x
         scaleFactorY = y > 0 ? scaleFactorY * y : scaleFactorY / -y
-        drawTranslated()
+        // drawTranslated()
     }
 
     function panUp(n, save=1) {
         if (save) saveStatus()
         panY -= n
-        drawTranslated()
+        // drawTranslated()
     }
 
     function panDown(n, save=1) {
         if (save) saveStatus()
         panY += n
-        drawTranslated()
+        // drawTranslated()
     }
 
     function panLeft(n, save=1) {
         if (save) saveStatus()
         panX -= n
-        drawTranslated()
+        // drawTranslated()
     }
 
     function panRight(n, save=1) {
         if (save) saveStatus()
         panX += n
-        drawTranslated()
+        // drawTranslated()
     }
 
     function drawTranslated() {
@@ -179,7 +181,8 @@
         ctx.translate(cw / 2, ch / 2)
         ctx.scale(scaleFactorX, scaleFactorY)
         ctx.translate(panX, panY)
-        if (fastRotate) ctx.rotate(fastRotate)  // поворот через быстрые действия
+        deg += (fastRotate - deg) * 0.1
+        ctx.rotate(deg) // поворот через быстрые действия
 
         // фигура
         ctx.beginPath();
@@ -252,7 +255,7 @@
         drawHands()
 
         ctx.restore()
-
+        requestAnimationFrame(drawTranslated)
         // // canvasX
         // ctxX.clearRect(0, 0, cw, ch)
         // ctxX.save()
@@ -323,9 +326,7 @@
         ctx.rotate(-pos)
     }
 
-    setInterval(function() {
-        drawTranslated()
-    })
+    drawTranslated()
 
     function isNumeric(str) {
         if (typeof str != "string") return false 
@@ -397,7 +398,7 @@
 
         panX = xm
         panY = -ym
-        drawTranslated()
+        // drawTranslated()
     })
 
     scaleBtn.addEventListener('click', () => {
@@ -427,7 +428,7 @@
             scaleFactorY = status.scaleFactorY
             fastRotate = status.fastRotate
             statuses.pop()
-            drawTranslated()
+            // drawTranslated()
         }
     })
 </script>
