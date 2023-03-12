@@ -18,7 +18,9 @@
         <button id="pandown" class="nav" title="Сместить вниз" onclick="panDown()">&#8681;</button>
         <button id="panleft" class="nav" title="Сместить влево" onclick="panLeft()">&#8678;</button>
         <button id="panright" class="nav" title="Сместить вправо" onclick="panRight()">&#8680;</button>
-        <button id="reset" class="nav" title="Сброс" onclick="panRight()">&#8634;</button>
+        <button id="rotateleft" class="nav" title="Повернуть влево на 90 градусов" onclick="rotate(-90)">&#10553;</button>
+        <button id="rotateright" class="nav" title="Повернуть вправо на 90 градусов" onclick="rotate(90)">&#10552;</button>
+        <button id="reset" class="nav" title="Сброс" onclick="reset()">&#8634;</button>
       </div>
       <div id="wrapper">
         <canvas id="canvas" width="800" height="850"></canvas>
@@ -42,7 +44,32 @@
     let panX = 0
     let panY = 0
     let scaleFactor = 1.00
-    let radius = 31
+    let radius = 62
+    let fastRotate = 0
+
+    function toRad(n) {
+        return n * Math.PI / 180
+    }
+
+    function rotate(degree) {
+        fastRotate = fastRotate + toRad(degree)
+        drawTranslated()
+    }
+
+    function reset() {
+        document.getElementById("reset").click(); {
+            cw = canvas.width
+            ch = canvas.height
+            mapW = 200
+            mapH = 200
+            panX = 0
+            panY = 0
+            scaleFactor = 1.00
+            radius = 62
+            fastRotate = 0
+            drawTranslated()
+        }
+    }
 
     function zoomIn() {
         document.getElementById("zoomin").click(); {
@@ -92,6 +119,7 @@
         ctx.save()
         ctx.translate(cw / 2, ch / 2)
         ctx.scale(scaleFactor, scaleFactor)
+        if (fastRotate) ctx.rotate(fastRotate)  // поворот через быстрые действия
         ctx.translate(panX, panY)
         // ctx.fillRect(mapW / -2, mapH / -2, mapW, mapH)
 
@@ -100,64 +128,64 @@
         let x = 0
         let y = 0
         const pi = Math.PI
-        ctx.arc(x, y, 45, pi/4, pi-pi/4, true) // внутренняя окружность
-        ctx.moveTo(x + 50, y)
-        ctx.arc(x, y, 50, 0, pi, true) // внешняя окружность
-        ctx.moveTo(x - 50, y)
-        ctx.lineTo(x - 50, y + 60)
-        ctx.lineTo(x + 50, y + 60)
-        ctx.lineTo(x + 50, y)
+        ctx.arc(x, y, 90, pi/4, pi-pi/4, true) // внутренняя окружность
+        ctx.moveTo(x + 100, y)
+        ctx.arc(x, y, 100, 0, pi, true) // внешняя окружность
+        ctx.moveTo(x - 100, y)
+        ctx.lineTo(x - 100, y + 120)
+        ctx.lineTo(x + 100, y + 120)
+        ctx.lineTo(x + 100, y)
 
         // хорда
-        ctx.moveTo(45 * Math.cos(pi/4), 45 * Math.sin(pi-pi/4))
-        ctx.lineTo(x - 45 * Math.cos(pi/4), 45 * Math.sin(pi-pi/4))
+        ctx.moveTo(90 * Math.cos(pi/4), 90 * Math.sin(pi-pi/4))
+        ctx.lineTo(x - 90 * Math.cos(pi/4), 90 * Math.sin(pi-pi/4))
 
         // треугольник
-        ctx.moveTo(x + 45, y + 55)
-        ctx.lineTo(x + 25, y + 55)
-        ctx.lineTo(x + 45, y + 35)
-        ctx.lineTo(x + 45, y + 55)
+        ctx.moveTo(x + 90, y + 110)
+        ctx.lineTo(x + 50, y + 110)
+        ctx.lineTo(x + 90, y + 70)
+        ctx.lineTo(x + 90, y + 110)
 
         // кнопка сверху
-        ctx.moveTo(50 * Math.cos(pi/2 - pi/10), 50 * Math.sin(pi + (pi/2 - pi/10)))
-        ctx.lineTo(50 * Math.cos(pi/2 - pi/10), 50 * Math.sin(pi + (pi/2 - pi/10)) - 8)
-        ctx.lineTo(50 * Math.cos(-pi/2 - pi/10), 50 * Math.sin(pi + (pi/2 - pi/10)) - 8)
-        ctx.lineTo(50 * Math.cos(-pi/2 - pi/10), 50 * Math.sin(pi + (pi/2 - pi/10)))
+        ctx.moveTo(100 * Math.cos(pi/2 - pi/10), 100 * Math.sin(pi + (pi/2 - pi/10)))
+        ctx.lineTo(100 * Math.cos(pi/2 - pi/10), 100 * Math.sin(pi + (pi/2 - pi/10)) - 16)
+        ctx.lineTo(100 * Math.cos(-pi/2 - pi/10), 100 * Math.sin(pi + (pi/2 - pi/10)) - 16)
+        ctx.lineTo(100 * Math.cos(-pi/2 - pi/10), 100 * Math.sin(pi + (pi/2 - pi/10)))
 
         // подставка
-        ctx.moveTo(x - 50, y + 70)
-        ctx.lineTo(x + 50, y + 70)
-        ctx.lineTo(x + 50, y + 110)
-        ctx.lineTo(x - 50, y + 110)
-        ctx.lineTo(x - 50, y + 70)
+        ctx.moveTo(x - 100, y + 140)
+        ctx.lineTo(x + 100, y + 140)
+        ctx.lineTo(x + 100, y + 220)
+        ctx.lineTo(x - 100, y + 220)
+        ctx.lineTo(x - 100, y + 140)
 
         // текстура подставки
-        for (let i = 0; i < 100; i += 4) {
-            ctx.moveTo((x - 50) + i, y + 70)
-            ctx.lineTo((x - 50) + i, y + 110)
+        for (let i = 0; i < 200; i += 8) {
+            ctx.moveTo((x - 100) + i, y + 140)
+            ctx.lineTo((x - 100) + i, y + 220)
         }
-        for (let i = 0.8; i < 16; i *= 2) {
-            ctx.moveTo((x - 50) + i, y + 70)
-            ctx.lineTo((x - 50) + i, y + 110)
+        for (let i = 1.6; i < 32; i *= 2) {
+            ctx.moveTo((x - 100) + i, y + 140)
+            ctx.lineTo((x - 100) + i, y + 220)
         }
-        for (let i = 0.8; i < 16; i *= 2) {
-            ctx.moveTo((x + 50) - i, y + 70)
-            ctx.lineTo((x + 50) - i, y + 110)
-        }
-
-        ctx.moveTo(x - 15, y + 70)
-        ctx.lineTo(x - 15, y + 85)
-        ctx.lineTo(x + 15, y + 85)
-        ctx.lineTo(x + 15, y + 70)
-        for (let i = 0; i < 30; i += 3) {
-            ctx.moveTo((x - 15) + i, y + 70)
-            ctx.lineTo((x - 15) + i, y + 85)
+        for (let i = 1.6; i < 32; i *= 2) {
+            ctx.moveTo((x + 100) - i, y + 140)
+            ctx.lineTo((x + 100) - i, y + 220)
         }
 
-        ctx.moveTo(x - 35, y + 110)
-        ctx.lineTo(x - 35, y + 105)
-        ctx.lineTo(x + 35, y + 105)
-        ctx.lineTo(x + 35, y + 110)
+        ctx.moveTo(x - 30, y + 140)
+        ctx.lineTo(x - 30, y + 170)
+        ctx.lineTo(x + 30, y + 170)
+        ctx.lineTo(x + 30, y + 140)
+        for (let i = 0; i < 60; i += 6) {
+            ctx.moveTo((x - 30) + i, y + 140)
+            ctx.lineTo((x - 30) + i, y + 170)
+        }
+
+        ctx.moveTo(x - 70, y + 220)
+        ctx.lineTo(x - 70, y + 210)
+        ctx.lineTo(x + 70, y + 210)
+        ctx.lineTo(x + 70, y + 220)
         ctx.stroke() // контур всех проведенных линий
 
         // стрелки + циферблат
@@ -188,17 +216,17 @@
     function drawMarkers() {
         let ang
         let num
-        ctx.font = radius*0.15 + "px arial"
+        ctx.font = radius * 0.15 + "px arial"
         ctx.textBaseline = "middle"
         ctx.textAlign = "center"
         for (num = 1; num <= 12; num++) {
             ang = num * Math.PI / 6
             ctx.rotate(ang)
-            ctx.translate(0, -radius*0.85)
+            ctx.translate(0, -radius * 0.85)
             ctx.rotate(-ang)
             ctx.fillText(num.toString(), 0, 0)
             ctx.rotate(ang)
-            ctx.translate(0, radius*0.85)
+            ctx.translate(0, radius * 0.85)
             ctx.rotate(-ang)
         }
     }
@@ -210,7 +238,7 @@
         let second = now.getSeconds()
 
         // часовая стрелка
-        hour = hour % 12;
+        hour = hour % 12
         hour = (hour * Math.PI / 6) + 
             (minute * Math.PI / (6 * 60)) +
             (second * Math.PI / (360 * 60))
