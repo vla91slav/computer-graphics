@@ -115,44 +115,44 @@
         }
     }
 
-    function zoomIn() {
+    function zoomIn(n=1.1) {
         document.getElementById("zoomin").click(); {
-            scaleFactor *= 1.1
+            scaleFactor *= n
             drawTranslated()
         }
     }
 
-    function zoomOut() {
+    function zoomOut(n=1.1) {
         document.getElementById("zoomout").click(); {
-            scaleFactor /= 1.1
+            scaleFactor /= n
             drawTranslated()
         }
     }
 
-    function panUp() {
+    function panUp(n=25) {
         document.getElementById("panup").click(); {
-            panY -= 25
+            panY -= n
             drawTranslated()
         }
     }
 
-    function panDown() {
+    function panDown(n=25) {
         document.getElementById("pandown").click(); {
-            panY += 25
+            panY += n
             drawTranslated()
         }
     }
 
-    function panLeft() {
+    function panLeft(n=25) {
         document.getElementById("panleft").click(); {
-            panX -= 25
+            panX -= n
             drawTranslated()
         }
     }
 
-    function panRight() {
+    function panRight(n=25) {
         document.getElementById("panright").click(); {
-            panX += 25
+            panX += n
             drawTranslated()
         }
     }
@@ -310,10 +310,78 @@
     }
 
     setInterval(function() {
-        // ctx.clearRect(-radius,-radius,radius*2,radius*2)
-        // drawMarkers()
-        // drawHands()
         drawTranslated()
+    })
+
+    function isNumeric(str) {
+        if (typeof str != "string") return false 
+        return !isNaN(str)
+    }
+
+    const moveBtn = document.getElementById('move')
+    const rotateBtn = document.getElementById('rotatebtn')
+    const updBtn = document.getElementById('centerupdate')
+    const scaleBtn = document.getElementById('scale')
+
+    const moveX = document.getElementById('xmove')
+    const moveY = document.getElementById('ymove')
+
+    const angle = document.getElementById('rotate')
+
+    const centerX = document.getElementById('xcenter')
+    const centerY = document.getElementById('ycenter')
+
+    const scaleX = document.getElementById('xscale')
+    const scaleY = document.getElementById('yscale')
+
+    moveBtn.addEventListener('click', () => {
+        let xm = moveX.value
+        let ym = moveY.value
+        if (!isNumeric(xm) || !isNumeric(ym)) {
+            moveX.value = ''
+            moveY.value = ''
+            alert('Некорректный ввод координат')
+            return
+        }
+        xm = parseFloat(xm)
+        ym = parseFloat(ym)
+
+        if (xm > 0) panRight(xm)
+        else panLeft(xm)
+
+        if (ym > 0) panUp(ym)
+        else panDown(ym)
+    })
+
+    rotateBtn.addEventListener('click', () => {
+        let a = angle.value
+        if (!isNumeric(a)) {
+            angle.value = ''
+            alert('Некорректный ввод угла')
+            return
+        }
+        a = parseFloat(a)
+        rotate(a)
+    })
+
+    updBtn.addEventListener('click', () => {
+        let xm = centerX.value
+        let ym = centerY.value
+        if (!isNumeric(xm) || !isNumeric(ym)) {
+            centerX.value = ''
+            centerY.value = ''
+            alert('Некорректный ввод координат')
+            return
+        }
+        xm = parseFloat(xm)
+        ym = parseFloat(ym)
+        x = xm
+        y = ym
+        if (xm > 0) panRight(xm)
+        else panLeft(xm)
+
+        if (ym > 0) panUp(ym)
+        else panDown(ym)
     })
 </script>
 </html>
