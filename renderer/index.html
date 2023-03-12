@@ -43,8 +43,9 @@
     var panX = 0
     var panY = 0
     var scaleFactor = 1.00
+    let radius = 30
 
-    drawTranslated()
+    // drawTranslated()
 
     function zoomIn() {
         document.getElementById("zoomin").click(); {
@@ -95,7 +96,6 @@
         ctx.translate(cw / 2, ch / 2)
         ctx.scale(scaleFactor, scaleFactor)
         ctx.translate(panX, panY)
-        ctx.fillStyle = "Green"
         // ctx.fillRect(mapW / -2, mapH / -2, mapW, mapH)
 
         // фигура
@@ -103,7 +103,7 @@
         let x = 0
         let y = 0
         const pi = Math.PI
-        ctx.arc(x, y, 40, pi/4, pi-pi/4, true) // внутренняя окружность
+        ctx.arc(x, y, 45, pi/4, pi-pi/4, true) // внутренняя окружность
         ctx.moveTo(x + 50, y)
         ctx.arc(x, y, 50, 0, pi, true) // внешняя окружность
         ctx.moveTo(x - 50, y)
@@ -112,8 +112,8 @@
         ctx.lineTo(x + 50, y)
 
         // хорда
-        ctx.moveTo(40 * Math.cos(pi/4), 40 * Math.sin(pi-pi/4))
-        ctx.lineTo(x - 40 * Math.cos(pi/4), 40 * Math.sin(pi-pi/4))
+        ctx.moveTo(45 * Math.cos(pi/4), 45 * Math.sin(pi-pi/4))
+        ctx.lineTo(x - 45 * Math.cos(pi/4), 45 * Math.sin(pi-pi/4))
 
         // треугольник
         ctx.moveTo(x + 45, y + 55)
@@ -161,8 +161,12 @@
         ctx.lineTo(x - 35, y + 105)
         ctx.lineTo(x + 35, y + 105)
         ctx.lineTo(x + 35, y + 110)
+        ctx.stroke() // контур всех проведенных линий
 
-        ctx.stroke()
+        // стрелки + циферблат
+        ctx.clearRect(-radius,-radius,radius*2,radius*2);
+        drawMarkers();
+        drawHands();
 
         ctx.restore()
 
@@ -183,60 +187,64 @@
         // ctxX.stroke()
         // ctxX.restore()
     }
+
+    function drawMarkers() {
+        var ang;
+        var num;
+        ctx.font = radius*0.15 + "px arial";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        for(num = 1; num <= 12; num++){
+            ang = num * Math.PI / 6;
+            ctx.rotate(ang);
+            ctx.translate(0, -radius*0.85);
+            ctx.rotate(-ang);
+            ctx.fillText(num.toString(), 0, 0);
+            ctx.rotate(ang);
+            ctx.translate(0, radius*0.85);
+            ctx.rotate(-ang);
+        }
+    }
+
+    function drawHands() {
+        var now = new Date();
+        var hour = now.getHours();
+        var minute = now.getMinutes();
+        var second = now.getSeconds();
+
+        // часовая стрелка
+        hour = hour % 12;
+        hour = (hour * Math.PI / 6) + 
+            (minute * Math.PI / (6 * 60)) +
+            (second * Math.PI / (360 * 60));
+        drawHand(hour, radius*0.5, radius*0.07);
+
+        // минутная стрелка
+        minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+        drawHand(minute, radius*0.8, radius*0.07);
+
+        // секундная стрелка
+        second = (second * Math.PI / 30);
+        drawHand(second, radius*0.9, radius*0.02);
+    }
+
+    // отрисовка стрелок
+    function drawHand(pos, length, width) {
+        ctx.beginPath();
+        ctx.lineWidth = width;
+        ctx.lineCap = "round";
+        ctx.moveTo(0,0);
+        ctx.rotate(pos);
+        ctx.lineTo(0, -length);
+        ctx.stroke();
+        ctx.rotate(-pos);
+    }
+
+    setInterval(function() {
+        // ctx.clearRect(-radius,-radius,radius*2,radius*2);
+        // drawMarkers();
+        // drawHands();
+        drawTranslated()
+    })
 </script>
-<!-- <script>
-    // let canvas = document.getElementById('canvas');
-    // let ctx = canvas.getContext('2d');
-    // let scale = 1
-
-    // function draw() {
-    //     if (canvas.getContext) {
-    //         ctx.beginPath();
-    //         let x = 75
-    //         let y = 75
-    //         const pi = Math.PI
-    //         ctx.arc(x, y, 40, pi/4, pi-pi/4, true) // внутренняя окружность
-    //         ctx.moveTo(x + 50, y)
-    //         ctx.arc(x, y, 50, 0, pi, true) // внешняя окружность
-    //         ctx.moveTo(x - 50, y)
-    //         ctx.lineTo(x - 50, y + 50)
-    //         ctx.lineTo(x + 50, y + 50)
-    //         ctx.lineTo(x + 50, y)
-    //         ctx.moveTo(x + 40, y)
-    //         ctx.stroke();
-    //     }
-    // }
-
-    // function zoom(event) {
-    //     event.preventDefault()
-    //     const delta = event.wheelDelta ? event.wheelDelta / 40 : event.deltaY ? -event.deltaY : 0
-    //     if (delta) {
-    //         const x = event.offsetX
-    //         const y = event.offsetY
-    //         const pointBefore = { x: (x - canvas.width / 2) / scale, y: (y - canvas.height / 2) / scale }
-    //         scale += delta > 0 ? 0.1 : -0.1
-    //         const pointAfter = { x: (x - canvas.width / 2) / scale, y: (y - canvas.height / 2) / scale }
-    //         const dx = pointAfter.x - pointBefore.x
-    //         const dy = pointAfter.y - pointBefore.y
-    //         ctx.translate(dx * scale, dy * scale)
-    //         ctx.scale(scale, scale)
-    //         ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //         draw()
-    //     }
-    // }
-
-
-    // draw()
-    // // canvas.addEventListener("wheel", zoom)
-    // canvas.addEventListener("wheel", (event) => {
-    //     event.preventDefault()
-    //     if (event.deltaY < 0) {
-    //         ctx.scale(1.05,1.05, canvas.width/2, canvas.height/2)
-    //     } else {
-    //         ctx.scale(-0.95,-0.95, canvas.width/2, canvas.height/2)
-    //     }
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    //     draw()
-    // })
-</script> -->
 </html>

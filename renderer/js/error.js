@@ -2,8 +2,8 @@ const path = require('path')
 const url = require('url')
 const { app, ipcRenderer } = require('electron')
 
-const testBtn = document.getElementById('window')
+const testBtn = document.getElementById('test')
 
 testBtn.addEventListener('click', () => {
-    ipcRenderer.send('open-help-window')
+    console.log('123')
 })
