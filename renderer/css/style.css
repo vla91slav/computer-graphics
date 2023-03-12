@@ -1,7 +1,28 @@
 #wrapper {
     position: relative;
-  }
-  canvas {
+}
+
+canvas {
     position: absolute;
     border: 1px solid Black;
-  }
+}
+
+.fast-moves {
+    display: flex;
+    flex-direction: row;
+}
+
+.moves {
+    margin-right: 30px;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.nav {
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+}

@@ -10,17 +10,19 @@
 </head>
 <body>
     <!-- <canvas id="myCanvas" width="800" height="800"></canvas> -->
-    <div id="wrapper">
-        <button id="zoomin" class="nav" title="Zoom In" onclick="zoomIn()">&#43;</button>
-        <button id="zoomout" class="nav" title="Zoom Out" onclick="zoomOut()">&#8722;</button>
-        <button id="panup" class="nav" title="Up" onclick="panUp()">&#8679;</button>
-        <button id="pandown" class="nav" title="Down" onclick="panDown()">&#8681;</button>
-        <button id="panleft" class="nav" title="Left" onclick="panLeft()">&#8678;</button>
-        <button id="panright" class="nav" title="Right" onclick="panRight()">&#8680;</button>
+    <div class="fast-moves">
+        <p class="moves">Быстрые действия:</p>
+        <button id="zoomin" class="nav" title="Приблизить" onclick="zoomIn()">&#43;</button>
+        <button id="zoomout" class="nav" title="Уменьшить" onclick="zoomOut()">&#8722;</button>
+        <button id="panup" class="nav" title="Сместить вверх" onclick="panUp()">&#8679;</button>
+        <button id="pandown" class="nav" title="Сместить вниз" onclick="panDown()">&#8681;</button>
+        <button id="panleft" class="nav" title="Сместить влево" onclick="panLeft()">&#8678;</button>
+        <button id="panright" class="nav" title="Сместить вправо" onclick="panRight()">&#8680;</button>
+        <button id="reset" class="nav" title="Сброс" onclick="panRight()">&#8634;</button>
       </div>
       <div id="wrapper">
-        <canvas id="canvas" width="400" height="400"></canvas>
-        <canvas id="canvasX" width="400" height="400"></canvas>
+        <canvas id="canvas" width="800" height="850"></canvas>
+        <canvas id="canvasX" width="800" height="850"></canvas>
       </div>
     <div><button id="window" hidden>new window</button></div>
 </body>
@@ -212,15 +214,15 @@
         hour = (hour * Math.PI / 6) + 
             (minute * Math.PI / (6 * 60)) +
             (second * Math.PI / (360 * 60))
-        drawHand(hour, radius*0.5, radius*0.07)
+        drawHand(hour, radius * 0.5, radius * 0.07)
 
         // минутная стрелка
         minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60))
-        drawHand(minute, radius*0.8, radius*0.07)
+        drawHand(minute, radius * 0.8, radius * 0.07)
 
         // секундная стрелка
         second = (second * Math.PI / 30)
-        drawHand(second, radius*0.9, radius*0.02)
+        drawHand(second, radius * 0.9, radius * 0.02)
     }
 
     // отрисовка стрелок
